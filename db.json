@@ -1,5 +1,34 @@
 {
-  "users": [{ "id": 1, "name": "Kim" }],
+  "users": [
+    {
+      "id": 1,
+      "name": "Kim"
+    },
+    {
+      "name": "Shawn McCullough DDS",
+      "id": 2
+    },
+    {
+      "name": "Tracy Hilll",
+      "id": 3
+    },
+    {
+      "name": "Archie Auer",
+      "id": 4
+    },
+    {
+      "name": "Rodney Haley",
+      "id": 5
+    },
+    {
+      "name": "Ross Kulas",
+      "id": 6
+    },
+    {
+      "name": "Willis Borer",
+      "id": 7
+    }
+  ],
   "albums": [],
   "photos": []
 }
