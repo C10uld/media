@@ -1,28 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, addUser } from "../store";
 import Skeleton from "./Skeleton";
 import Button from "./Button";
 
 function UsersList() {
+  const [isLoadingUsers, setIsLoadingUsers] = useState(false); //Load 중인지 여부 추적 true라면 skeleton loader를 표시
+  const [loadingUsersError, setLoadingUsersError] = useState(null); // 오류가 발생하면(not null) 오류 메시지 표시
   const dispatch = useDispatch();
-  const { isLoading, data, error } = useSelector((state) => {
+  const { data } = useSelector((state) => {
+    // 위에서 Loading 과 Error를 관리하기 때문에 이 부분은 수정됐다.
     return state.users; // {data: [], isLoading: false, error: null}
   });
 
   useEffect(() => {
-    dispatch(fetchUsers());
+    setIsLoadingUsers(true);
+    dispatch(fetchUsers())
+      .unwrap()
+      .then(() => {
+        /* 요청이 성공했을 때나 실패했을 때,
+        isLoadingUsers / loadingUsersError 함수를 사용해서 상태를 로드하고,
+        업데이트할 수 있다는 것. fetchUsers.js 에서 get test 진행. */
+        console.log("성공");
+      })
+      .catch(() => {
+        console.log("실패");
+      });
   }, [dispatch]);
 
   const handleUserAdd = () => {
     dispatch(addUser());
   };
 
-  if (isLoading) {
+  if (isLoadingUsers) {
     return <Skeleton times={6} className="h-10 w-full" />;
   }
 
-  if (error) {
+  if (loadingUsersError) {
     return <div>Error fetching data...</div>;
   }
 
