@@ -40,6 +40,11 @@ const usersSlice = createSlice({
     });
     builder.addCase(removeUser.fulfilled, (state, action) => {
       state.isLoading = false;
+      state.data = state.data.filter((user) => {
+        //state.data 배열에서 사용자의 id가 action.payload의 id와 일치하는 요소 제거
+        return user.id !== action.payload.id;
+      });
+      console.log(action.payload);
     });
     builder.addCase(removeUser.rejected, (state, action) => {
       state.isLoading = false;
