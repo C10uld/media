@@ -7,6 +7,8 @@ import Button from "./Button";
 function UsersList() {
   const [isLoadingUsers, setIsLoadingUsers] = useState(false); //Load 중인지 여부 추적 true라면 skeleton loader를 표시
   const [loadingUsersError, setLoadingUsersError] = useState(null); // 오류가 발생하면(not null) 오류 메시지 표시
+  const [isCreatingUser, setIsCreatingUser] = useState(false);
+  const [creatingUserError, setCreatingUserError] = useState(null);
   const dispatch = useDispatch();
   const { data } = useSelector((state) => {
     // 위에서 Loading 과 Error를 관리하기 때문에 이 부분은 수정됐다.
@@ -27,7 +29,11 @@ function UsersList() {
   }, [dispatch]);
 
   const handleUserAdd = () => {
-    dispatch(addUser());
+    setIsCreatingUser(true);
+    dispatch(addUser())
+      .unwrap()
+      .catch((err) => setCreatingUserError(err))
+      .finally(() => setIsCreatingUser(false));
   };
 
   if (isLoadingUsers) {
@@ -52,7 +58,12 @@ function UsersList() {
     <div>
       <div className="flex flex-row justify-between m-3">
         <h1 className="m-2 text-xl">Users</h1>
-        <Button onClick={handleUserAdd}>+ Add User</Button>
+        {isCreatingUser ? (
+          "Creating User"
+        ) : (
+          <Button onClick={handleUserAdd}>+ Add User</Button>
+        )}
+        {creatingUserError && "Error creating user"}
       </div>
       {renderedUsers}
     </div>
