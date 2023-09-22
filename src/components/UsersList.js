@@ -1,39 +1,43 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUsers, addUser } from "../store";
 import Skeleton from "./Skeleton";
 import Button from "./Button";
 
-function UsersList() {
-  const [isLoadingUsers, setIsLoadingUsers] = useState(false); //Load 중인지 여부 추적 true라면 skeleton loader를 표시
-  const [loadingUsersError, setLoadingUsersError] = useState(null); // 오류가 발생하면(not null) 오류 메시지 표시
-  const [isCreatingUser, setIsCreatingUser] = useState(false);
-  const [creatingUserError, setCreatingUserError] = useState(null);
+function useThunk(thunk) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(null);
   const dispatch = useDispatch();
+
+  const runThunk = useCallback(() => {
+    // really nice hook!
+    //실제로 thunk를 실행 및 전달하고 업데이트할 함수
+    setIsLoading(true);
+    dispatch(thunk())
+      .unwrap()
+      .catch((err) => setError(err))
+      .finally(() => setIsLoading(false));
+  }, [dispatch, thunk]);
+
+  return [runThunk, isLoading, error];
+}
+
+function UsersList() {
+  const [doFetchUsers, isLoadingUsers, loadingUsersError] =
+    useThunk(fetchUsers);
+  const [doCreateUser, isCreatingUser, creatingUserError] = useThunk(addUser);
+
   const { data } = useSelector((state) => {
     // 위에서 Loading 과 Error를 관리하기 때문에 이 부분은 수정됐다.
     return state.users; // {data: [], isLoading: false, error: null}
   });
 
   useEffect(() => {
-    setIsLoadingUsers(true);
-    dispatch(fetchUsers())
-      .unwrap()
-      /* 요청이 성공했을 때나 실패했을 때,
-        isLoadingUsers / loadingUsersError 함수를 사용해서 상태를 로드하고,
-        업데이트할 수 있다는 것. fetchUsers.js 에서 get test 진행. */
-      // console.log("성공");
-      .catch((err) => setLoadingUsersError(err))
-      // console.log("실패");
-      .finally(() => setIsLoadingUsers(false));
-  }, [dispatch]);
+    doFetchUsers();
+  }, [doFetchUsers]);
 
   const handleUserAdd = () => {
-    setIsCreatingUser(true);
-    dispatch(addUser())
-      .unwrap()
-      .catch((err) => setCreatingUserError(err))
-      .finally(() => setIsCreatingUser(false));
+    doCreateUser();
   };
 
   if (isLoadingUsers) {
