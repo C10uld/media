@@ -17,15 +17,13 @@ function UsersList() {
     setIsLoadingUsers(true);
     dispatch(fetchUsers())
       .unwrap()
-      .then(() => {
-        /* 요청이 성공했을 때나 실패했을 때,
+      /* 요청이 성공했을 때나 실패했을 때,
         isLoadingUsers / loadingUsersError 함수를 사용해서 상태를 로드하고,
         업데이트할 수 있다는 것. fetchUsers.js 에서 get test 진행. */
-        console.log("성공");
-      })
-      .catch(() => {
-        console.log("실패");
-      });
+      // console.log("성공");
+      .catch((err) => setLoadingUsersError(err))
+      // console.log("실패");
+      .finally(() => setIsLoadingUsers(false));
   }, [dispatch]);
 
   const handleUserAdd = () => {
