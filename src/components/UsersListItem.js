@@ -3,18 +3,18 @@ import Button from "./Button";
 import { removeUser } from "../store";
 import { useThunk } from "../hooks/use-thunk";
 import ExpandablePanel from "./ExpandablePanel";
-import AlbumList from "./AlbumList";
+import AlbumList from "./AlbumsList";
 
 function UsersListItem({ user }) {
   const [doRemoveUser, isLoading, error] = useThunk(removeUser);
 
-  const hadleClick = () => {
+  const handleClick = () => {
     doRemoveUser(user);
   };
 
   const header = (
     <>
-      <Button className="mr-3" loading={isLoading} onClick={hadleClick}>
+      <Button className="mr-3" loading={isLoading} onClick={handleClick}>
         <GoTrash />
       </Button>
       {error && <div>Error deleting user.</div>}

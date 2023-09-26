@@ -1,5 +1,8 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
+/* An API endpoint is a digital location where an API receives requests
+about a specific resource on its server. URL(Uniform Resource Locator)*/
+
 const albumsApi = createApi({
   /* When we create an API, we get back a slice, somg thunks, action creators
     and then a set of automatically generated hooks. */
@@ -9,7 +12,7 @@ const albumsApi = createApi({
   }),
   endpoints(builder) {
     return {
-      fetchAlbus: builder.query({
+      fetchAlbums: builder.query({
         //for deciding what the name of a hook
         query: (user) => {
           return {
@@ -24,3 +27,6 @@ const albumsApi = createApi({
     };
   },
 });
+
+export const { useFetchAlbumsQuery } = albumsApi;
+export { albumsApi };
