@@ -24,7 +24,7 @@ function UsersListItem({ user }) {
 
   return (
     <ExpandablePanel header={header}>
-      <AlbumList user={{ user }} />
+      <AlbumList user={user} />
     </ExpandablePanel>
   );
 }

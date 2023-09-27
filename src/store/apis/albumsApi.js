@@ -15,8 +15,9 @@ const albumsApi = createApi({
       fetchAlbums: builder.query({
         //for deciding what the name of a hook
         query: (user) => {
+          //This function called with user object
           return {
-            url: "/albums",
+            url: "/albums", //url
             params: {
               userId: user.id, // ?userId = user.id //Key
             },
